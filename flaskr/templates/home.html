@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="static/script.js" defer></script>
+</head>
+<body>
+    <div id="container">
+        <div class="top-bar">
+            <div class="app-name-cont">
+                <span class="app-name">Noter</span>
+            </div>
+
+            <div class="search-sort">
+                <input type="search" class="search" placeholder="Search...">
+                <div class="sort-container">
+                    <select name="sort-by" id="sort-by">
+                        <option value="date-created">Date Created</option>
+                        <option value="date-updated" selected>Date Updated</option>
+                        <option value="subject">Subject</option>
+                        <option value="favorite">Favorite</option>
+                    </select>
+                    <input type="radio" class="sort-order" name="sort-order" id="asc">
+                    <label for="asc" class="sort-order">Older to Newer</label> |
+                    <input type="radio" class="sort-order" name="sort-order" id="des" checked>
+                    <label for="des" class="sort-order">Newer to Older</label>
+                </div>
+            </div>
+            <div class="user" title="">
+                <div class="user-logo"></div>
+                <button id="signout">Sign out</button>
+            </div>
+        </div>
+        
+        <h2 class="no-notes-add-note">No Notes, <span>Add</span> your first note!</h2>
+        <img src="static/img/spinner.gif" class="loading" alt="loading...">
+        
+        <div class="notes-container">
+            
+        </div>
+        <button class="add-note" title="Add Note">+</button>
+    </div>
+</body>
+</html>
