@@ -249,6 +249,8 @@
         })
 
         document.querySelector('.add-note').onclick = function(){addNoteBtn(firstName)};
+        noNotesAddNote.querySelector('span').onclick = function(){addNoteBtn(firstName)};
+
         const search = document.querySelector('.search');
         search.addEventListener('input', function(){
             for (let elem of document.querySelectorAll('.note-element')){
@@ -260,7 +262,91 @@
                     elem.style.display = 'none'
                 }
             }
+        });
+
+        const sortBy = document.getElementById('sort-by')
+
+        const sortAsc = document.getElementById('asc')
+        const sortAscLabel = document.querySelector(`label[for="${sortAsc.id}"]`)
+        
+        const sortDes = document.getElementById('des')
+        const sortDesLabel = document.querySelector(`label[for="${sortDes.id}"]`)
+
+        sortBy.addEventListener('change', function(){
+            switch (sortBy.value){
+                case 'date-created':
+                    setSortBy('date-created')
+                    break;
+                case 'subject':
+                    setSortBy('subject')
+                    break;
+                case 'favorite':
+                    setSortBy('favorite')
+                    break;
+                }
+            })
+    
+        document.querySelectorAll('.sort-order').forEach(each => {
+            each.addEventListener('change', function(){
+                setSortBy(sortBy.value, each.id)
+            })
         })
+    
+        function setSortBy(selectedSort, order='asc'){
+            let newArray = [...notesContainer.children]
+            switch (selectedSort){
+                case 'date-created':
+                    sortAscLabel.innerText = 'Older to Newer'
+                    sortDesLabel.innerText = 'Newer to Older'
+                    
+                    newArray.sort((elem1, elem2) => {
+                        const date1 = new Date(elem1.querySelector('.created-span .date-text').id.slice(1));
+                        const date2 = new Date(elem2.querySelector('.created-span .date-text').id.slice(1));
+                        return toggleAndReturn(order, date1, date2)
+                    }); break;
+    
+                case 'subject':
+                    sortAscLabel.innerText = 'A to Z'
+                    sortDesLabel.innerText = 'Z to A'
+                    
+                    newArray.sort((elem1, elem2) => {
+                        const subject1 = elem1.querySelector('.note-subject').innerText;
+                        const subject2 = elem2.querySelector('.note-subject').innerText;
+                        return toggleAndReturn(order, subject1, subject2, true)
+                    }); break;
+                    
+                case 'favorite':
+                    sortAscLabel.innerText = 'Favorite first'
+                    sortDesLabel.innerText = 'Favorite last'
+    
+                    newArray.sort((elem1, elem2) => {
+                        const fav1 = elem1.querySelector('.star-logo').src.includes('gold') ? 0: 1;
+                        const fav2 = elem2.querySelector('.star-logo').src.includes('gold') ? 0: 1;
+                        return toggleAndReturn(order, fav1, fav2)
+                    }); break;
+            }
+            notesContainer.innerHTML = ''
+            newArray.forEach(elem => notesContainer.appendChild(elem))
+        }
+    
+        function toggleAndReturn(order, a, b, string=false){
+            switch (order){
+                case 'asc':
+                    sortDes.checked = false
+                    sortAsc.checked = true
+                    if (string){
+                        return a.localeCompare(b)
+                    }
+                    return a - b;
+                case 'des':
+                    sortAsc.checked = false
+                    sortDes.checked = true
+                    if (string){
+                        return b.localeCompare(a)
+                    }
+                    return b - a;
+            }
+        }
         
     } else {
         document.body.innerHTML = `
