@@ -4,6 +4,58 @@
     const cont = document.getElementById("container");
     const notesContainer = document.querySelector('.notes-container')
 
+    function highlight(text, word){
+        let lowerText = text.toLowerCase();
+        word = word.toLowerCase();
+
+        if (word.length > 0){
+            let start = 0
+            let indecies = []
+            let currentInd;
+            let inLst;
+            
+            while (lowerText.indexOf(word, start) != -1){
+                currentInd = lowerText.indexOf(word, start)
+                inLst = []
+
+                start = currentInd + 1
+                while (lowerText.indexOf(word, start) != -1 && (lowerText.indexOf(word, start) - currentInd) < word.length){
+                    inLst.push(currentInd)
+                    currentInd = lowerText.indexOf(word, start)
+                    start = currentInd + 1
+                }
+                if (inLst.length > 0){
+                    inLst.push(currentInd)
+                    indecies.push(inLst)
+                } else {
+                    indecies.push(currentInd)
+                    currentInd = lowerText.indexOf(word, start)
+                }
+            }
+    
+            const opening = '<span style="background-color: rgb(47, 47, 47); color: white;">'
+            const closing = '</span>'
+            
+            let newText = text
+            let incrementor = 0
+
+            let ind1;
+            let ind2;
+            for (let ind of indecies){
+                if (Array.isArray(ind)){
+                    ind1 = ind[0] + incrementor
+                    ind2 = word.length + (incrementor + ind[ind.length - 1])
+                } else {
+                    ind1 = ind + incrementor
+                    ind2 = word.length + ind1
+                }
+                newText = newText.slice(0, ind1) + opening + newText.slice(ind1, ind2) + closing + newText.slice(ind2);
+                incrementor += (opening + closing).length
+            }
+            return newText
+        }
+        return text
+    }
 
     function toggleFavorite(firstName, pk, starElement){
         fetch(`toggle-favorite/${firstName}/${pk}`)
@@ -193,6 +245,18 @@
         })
 
         document.querySelector('.add-note').onclick = function(){addNoteBtn(firstName)};
+        const search = document.querySelector('.search');
+        search.addEventListener('input', function(){
+            for (let elem of document.querySelectorAll('.note-element')){
+                if (elem.querySelector('.note-subject').innerText.toLowerCase().includes(search.value.toLowerCase()) || elem.querySelector('.note-text').innerText.toLowerCase().includes(search.value.toLowerCase())){
+                    elem.querySelector('.note-subject').innerHTML = highlight(elem.querySelector('.note-subject').innerText, search.value)
+                    elem.querySelector('.note-text').innerHTML = highlight(elem.querySelector('.note-text').innerText, search.value)
+                    elem.style.display = 'block'
+                } else {
+                    elem.style.display = 'none'
+                }
+            }
+        })
         
     } else {
         cont.innerHTML = `
