@@ -3,10 +3,6 @@ import json
 
 app = flask.Flask("note-app")
 
-# def get_html(file_name):
-#     with open(f"{file_name}.html") as file:
-#         return file.read()
-
 @app.route("/")
 def home():
     return flask.render_template("home.html")
@@ -28,11 +24,12 @@ def toggle_favorite(firstname, id):
         data = json.loads(db.read())
         for entry in data[firstname]:
             if entry["id"] == int(id):
-                entry["favorite"] = 1 if entry["favorite"] == 0 else 0
+                entry["favorite"] = 0 if entry["favorite"] else 1
+                returnDict = {"favorite": entry["favorite"]}
         db.seek(0)
         db.write(json.dumps(data, indent=4))
         db.truncate()
-        return {"favorite": entry["favorite"]}
+        return returnDict
     
 @app.route("/delete-note/<firstname>/<id>")
 def delete_note(firstname, id):
@@ -50,6 +47,7 @@ def delete_note(firstname, id):
     
 @app.route("/add-note/<firstname>", methods=("get", "post"))
 def add_note(firstname):
+    firstname = firstname.lower()
     with open("db.json", "r+") as db:
         data = json.loads(db.read())
         id = data["id_tracker"] + 1

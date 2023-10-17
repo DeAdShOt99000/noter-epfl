@@ -5,13 +5,63 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+    font-family: 'Varela Round', serif;
+}
+
+.user {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 70px;
+    padding: 1.5px 3px;
+    background-color: rgba(70, 70, 70, 0.5);
+    border-radius: 5px;
+}
+
+.user:hover {
+    cursor: pointer;
+    background-color: rgba(70, 70, 70, 1);
+    transition: background-color 0.15s ease-out;
+}
+
+.user:hover #signout {
+    transition: opacity 0.15s ease-out;
+    opacity: 1;
+}
+
+#user-welcome {
+    padding: 5px;
+}
+
+#user-welcome span {
+    font-family: pacifico, verdana;
+    text-wrap: nowrap;
+}
+
+#signout {
+    position: absolute;
+    width: 100%;
+    bottom: -30px;
+    right: 0.5px;
+    z-index: 5;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    background-color: rgba(70, 70, 70, 1);
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    opacity: 0;
+}
+
+#signout:hover {
+    color: white;
+    cursor: pointer;
 }
 
 .app-name {
     position: relative;
-    z-index: 4;
-    cursor: pointer;
     font-family: pacifico, verdana;
     font-size: 1.5rem;
     text-shadow: 1.5px 1.5px 1.5px rgb(0, 0, 0);
@@ -19,10 +69,11 @@ body {
 
 input, button, textarea, select {
     font-family: 'Varela Round', serif;
+
 }
 
 .user:hover {
-    border-radius: 5px;
+    border-radius: 5px; /***************************/
 }
 
 .sort-container {
@@ -38,7 +89,6 @@ input, button, textarea, select {
 
 #sort-by {
     position: relative;
-    z-index: 1;
     cursor: pointer;
     background-color: rgb(70, 70, 70);
     color: white;
@@ -66,10 +116,12 @@ input.sort-order:checked + label {
     text-shadow: rgb(47, 47, 47) 3px 3px 4px;
 }
 
-.search {
-    position: relative;
-    z-index: 3;
+#search {
     width: 60%;
+}
+
+.text-inp {
+    position: relative;
     padding: 3px;
     background-color: rgb(70, 70, 70);
     color: white;
@@ -78,11 +130,11 @@ input.sort-order:checked + label {
     opacity: 0.5;
 }
 
-.search::placeholder {
+.text-inp::placeholder {
     color: white;
 }
 
-.search:hover, .search:focus {
+.text-inp:hover, .text-inp:focus {
     opacity: 1;
 }
 
@@ -95,7 +147,7 @@ input.sort-order:checked + label {
 }
 
 .add-note {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     font-family: serif;
@@ -105,7 +157,6 @@ input.sort-order:checked + label {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    z-index: 9;
 
     width: 50px;
     height: 50px;
@@ -149,11 +200,11 @@ input.sort-order:checked + label {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.15s ease-out;
 }
 
 .note-element:hover {
-    transform: scale(105%);
+    transform: scale(101%);
 }
 
 .note-subject {
@@ -165,13 +216,6 @@ input.sort-order:checked + label {
     text-shadow: black 1px 1px 1px;
 }
 
-.edit-subject {
-    display: none;
-    width: 99%;
-    height: 21px;
-    margin: 0;
-}
-
 .note-text {
     padding: 5px;
     height: 150px;
@@ -179,19 +223,10 @@ input.sort-order:checked + label {
     overflow: auto;
 }
 
-.edit-note {
-    display: none;
-    height: 160px;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
 .note-dates {
     position: relative;
-    /* top: 10px; */
-    font-size: 9px;
-    padding: 2px 5px;
+    font-size: 10px;
+    padding: 7px 5px;
     background-color: black;
     color: gray;
 }
@@ -200,21 +235,9 @@ input.sort-order:checked + label {
     color: white;
 }
 
-.sc-btns {
-    display: none;
-    position: absolute;
-    z-index: 3;
-    right: 5px;
-    top: 1px;
-}
-
-.sc-btns button {
-    margin: 0 3px;
-}
-
 .star-logo {
     position: absolute;
-    top: 3.5px;
+    top: 2px;
     right: 2px;
     width: 19px;
     padding: 2px;
@@ -223,14 +246,14 @@ input.sort-order:checked + label {
 .star-logo:hover {
     cursor: pointer;
     border-radius: 50%;
-    background-color: darkgray;
+    background-color: rgba(255, 255, 0, 0.438);
 }
 
 .delete-logo {
     width: 19px;
     padding: 2px;
     position: absolute;
-    top: 3px;
+    top: 2px;
     right: 27px;
 }
 
@@ -245,6 +268,19 @@ input.sort-order:checked + label {
     font-size: 1rem;
 }
 
+.note-form .save-note {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    cursor: pointer;
+    opacity: 0.8;
+    width: 80px;
+}
+
+.note-form .save-note:hover {
+    opacity: 1;
+}
+
 #subject {
     height: 20px;
     width: 300px;
@@ -254,19 +290,6 @@ input.sort-order:checked + label {
 
 .notes-container .note-form {
     position: relative;
-}
-
-.green-btn, .red-btn {
-    position: absolute;
-    top: 2px;
-}
-
-.green-btn {
-    right: 5px;
-}
-
-.red-btn {
-    right: 60px;
 }
 
 .note-form .new-note {
@@ -287,28 +310,6 @@ input.sort-order:checked + label {
     background-color: cadetblue;
 }
 
-.red-btn {
-    border-radius: 5px;
-    border-style: solid;
-    border-color: red;
-    color: red;
-    background-color:darksalmon;
-}
-
-.green-btn:hover {
-    cursor: pointer;
-    border-color: cadetblue;
-    color: cadetblue;
-    background-color: green;
-}
-
-.red-btn:hover {
-    cursor: pointer;
-    border-color: darksalmon;
-    color: darksalmon;
-    background-color: red;
-}
-
 .loading {
     position: absolute;
     left: 50%;
@@ -325,19 +326,73 @@ input.sort-order:checked + label {
     color: black;
     padding: 10px;
     display: none;
+    width: max-content;
 }
 
 .no-notes-add-note span {
     color: white;
+    background-color: rgb(104, 104, 104);
+    padding: 2px 4px;
+    border: 2px solid white;
+    border-radius: 9px;
+    opacity: 0.8;
 }
 
 .no-notes-add-note span:hover {
     cursor: pointer;
-    text-decoration: underline;
+    opacity: 1;
+    outline: 3px solid rgb(163, 163, 163);
 }
 
-.highlight {
-    background-color:chartreuse;
+#name-form {
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(104, 104, 104);
+    padding: 50px;
+    border-radius: 10px;
+    border-right: 4px solid rgba(255, 255, 255, 0.619);
+    border-bottom: 4px solid rgba(255, 255, 255, 0.619);
+}
+
+#name-form span {
+    font-size: 6rem;
+}
+
+#name-form input {
+    font-size: 1.3rem;
+}
+
+#name-form input[type="text"] {
+    padding: 7px;
+}
+
+#name-form input[type="submit"] {
+    margin-top: 30px;
+    background-color: rgb(129, 129, 129);
+    color: white;
+    border: 3px solid white;
+    border-radius: 7px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+#name-form input[type="submit"]:hover {
+    opacity: 1;
+    transform: scale(103%);
+    transition: transform 0.15s ease-out;
+    
+}
+
+#name-form input[type="submit"]:disabled {
+    cursor: default;
+    opacity: 0.5;
+    transform: scale(100%);
 }
 
 @media screen and (max-width: 710px){
@@ -345,7 +400,7 @@ input.sort-order:checked + label {
         flex-direction: column;
     }
 
-    .search {
+    .text-inp {
         margin: 7px;
     }
 

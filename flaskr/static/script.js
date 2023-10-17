@@ -2,6 +2,8 @@
     "use strict";
 
     const notesContainer = document.querySelector('.notes-container')
+    const addNote = document.querySelector('.add-note')
+
 
     function highlight(text, word){
         let lowerText = text.toLowerCase();
@@ -70,6 +72,7 @@
             notesContainer.removeChild(noteElement)
             if (notesContainer.children.length < 1){
                 noNotesAddNote.style.display = 'block'
+                addNote.style.display = 'none'
             }
         })
     }
@@ -178,14 +181,15 @@
         noteDates.innerText = 'New Note'
         
         const saveNote = document.createElement('button')
-        saveNote.className = 'save-note'
+        saveNote.className = 'save-note green-btn'
         saveNote.innerText = 'Save'
         saveNote.onclick = function(){addNewNote(firstName)}
+
+        noteDates.appendChild(saveNote)
 
         newNoteForm.appendChild(noteSubject)
         newNoteForm.appendChild(noteText)
         newNoteForm.appendChild(noteDates)
-        newNoteForm.appendChild(saveNote)
 
         notesContainer.prepend(newNoteForm)
         noteSubject.focus()
@@ -215,19 +219,21 @@
             .then(data => {
                 createNote(firstName, data, true)
                 notesContainer.removeChild(document.querySelector('.note-form'))
+                addNote.style.display = 'flex'
             })
         } else {
             notesContainer.removeChild(document.querySelector('.note-form'))
         }
         if (notesContainer.children.length < 1){
             noNotesAddNote.style.display = 'block'
+            addNote.style.display = 'none'
         }
     }
 
     const firstName = localStorage.getItem("first-name")
     if (firstName){
-        const welcome = document.getElementsByClassName("user-logo")[0];
-        welcome.innerText = `Welcome ${firstName}!`;
+        const welcome = document.getElementById("user-welcome");
+        welcome.innerHTML = `Welcome <span>${firstName.replace(firstName[0], firstName[0].toUpperCase())} !</span>`;
         
         const signout = document.getElementById("signout");
         signout.addEventListener("click", function(){
@@ -241,17 +247,20 @@
             document.body.removeChild(document.querySelector('.loading'));
             if (Object.keys(data).length < 1){
                 noNotesAddNote.style.display = 'block';
+                
             } else {
+                addNote.style.display = 'flex'
                 for (let entry in data){
                     createNote(firstName, data[entry]);
                 }
+                setSortBy(sortBy.value, "des") // default sorting
             }
         })
 
-        document.querySelector('.add-note').onclick = function(){addNoteBtn(firstName)};
+        addNote.onclick = function(){addNoteBtn(firstName)};
         noNotesAddNote.querySelector('span').onclick = function(){addNoteBtn(firstName)};
 
-        const search = document.querySelector('.search');
+        const search = document.getElementById('search');
         search.addEventListener('input', function(){
             for (let elem of document.querySelectorAll('.note-element')){
                 if (elem.querySelector('.note-subject').innerText.toLowerCase().includes(search.value.toLowerCase()) || elem.querySelector('.note-text').innerText.toLowerCase().includes(search.value.toLowerCase())){
@@ -350,17 +359,25 @@
         
     } else {
         document.body.innerHTML = `
-        <form action="">
+        <form action="" id="name-form">
             <span class="app-name">Noter</span>
-            <input type="text" id="text" placeholder="Enter your first name...">
-            <input type="submit" id="submit" value="Submit">
+            <input type="text" id="text" class="text-inp" placeholder="Enter your first name...">
+            <input type="submit" id="submit" value="Submit" disabled>
         </form>
         `
-        const btn = document.getElementById("submit");
         const inp = document.getElementById("text");
+        const btn = document.getElementById("submit");
+
+        inp.addEventListener("input", function(){
+            if (inp.value == ""){
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            };
+        })
 
         btn.addEventListener("click", function(){
-            localStorage.setItem("first-name", inp.value);
+            localStorage.setItem("first-name", inp.value.toLowerCase());
         });
     };
 })();

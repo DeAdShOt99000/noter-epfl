@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Noter</title>
     <link rel="stylesheet" href="static/style.css">
     <script src="static/script.js" defer></script>
 </head>
@@ -14,10 +14,10 @@
         </div>
 
         <div class="search-sort">
-            <input type="search" class="search" placeholder="Search...">
+            <input type="search" id="search" class="text-inp" placeholder="Search...">
             <div class="sort-container">
                 <select name="sort-by" id="sort-by">
-                    <option value="date-created">Date Created</option>
+                    <option value="date-created" selected>Date Created</option>
                     <option value="subject">Subject</option>
                     <option value="favorite">Favorite</option>
                 </select>
@@ -27,8 +27,9 @@
                 <label for="des" class="sort-order">Newer to Older</label>
             </div>
         </div>
-        <div class="user" title="">
-            <div class="user-logo"></div>
+
+        <div class="user">
+            <div id="user-welcome"></div>
             <button id="signout">Sign out</button>
         </div>
     </div>
