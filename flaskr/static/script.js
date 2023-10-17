@@ -13,15 +13,15 @@
         })
     };
 
-    // function deleteNote(pk, noteElement){
-    //     fetch(`delete/${pk}`)
-    //     .then(function(){
-    //         notesContainer.removeChild(noteElement)
-    //         if (notesContainer.children.length < 1){
-    //             noNotesAddNote.style.display = 'block'
-    //         }
-    //     })
-    // }
+    function deleteNote(firstName, pk, noteElement){
+        fetch(`delete-note/${firstName}/${pk}`)
+        .then(function(){
+            notesContainer.removeChild(noteElement)
+            if (notesContainer.children.length < 1){
+                noNotesAddNote.style.display = 'block'
+            }
+        })
+    }
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -52,12 +52,10 @@
 
         const noteSubject = document.createElement('div')
         noteSubject.className = 'note-subject'
-        noteSubject.setAttribute('contenteditable', 'true')
         noteSubject.innerText = noteObj.subject
 
         const noteText = document.createElement('div')
         noteText.className = 'note-text'
-        noteText.setAttribute('contenteditable', 'true')
         noteText.innerText = noteObj.note
         
         const noteDates = document.createElement('div')
@@ -72,15 +70,6 @@
         cDateText.id = `c${noteObj.created_at}`
         cDateText.innerText = prettyDate(noteObj.created_at)
         
-        const updatedSpan = document.createElement('span')
-        updatedSpan.className = 'updated-span'
-        updatedSpan.innerText = 'Updated at: '
-        
-        const uDateText = document.createElement('span')
-        uDateText.className = 'date-text'
-        uDateText.id = `u${noteObj.updated_at}`
-        uDateText.innerText = prettyDate(noteObj.updated_at)
-
         const deleteLogo = document.createElement('img')
         deleteLogo.classList = 'delete-logo'
         deleteLogo.src = '/static/img/delete-logo.png'
@@ -91,11 +80,9 @@
         starLogo.alt = 'Favorite button'
         
         createdSpan.appendChild(cDateText)
-        updatedSpan.appendChild(uDateText)
         
         noteDates.appendChild(createdSpan)
         noteDates.appendChild(document.createElement('br'))
-        noteDates.appendChild(updatedSpan)
         noteDates.appendChild(deleteLogo)
         noteDates.appendChild(starLogo)
         
@@ -116,7 +103,74 @@
         // noteSubject.oninput = waitAndSave
         
         starLogo.onclick = function(){toggleFavorite(firstName, noteObj.id, starLogo)}
-        // deleteLogo.onclick = function(){deleteNote(noteObj.id, noteElement)}
+        deleteLogo.onclick = function(){deleteNote(firstName, noteObj.id, noteElement)}
+    }
+
+    const noNotesAddNote = document.querySelector('.no-notes-add-note')
+
+    function addNoteBtn(firstName){
+        noNotesAddNote.style.display = 'none'
+
+        const newNoteForm = document.createElement('div')
+        newNoteForm.className = 'note-element note-form'
+
+        const noteSubject = document.createElement('div')
+        noteSubject.className = 'note-subject'
+        noteSubject.setAttribute('contenteditable', 'true')
+
+        const noteText = document.createElement('div')
+        noteText.className = 'note-text'
+        noteText.setAttribute('contenteditable', 'true')
+
+        const noteDates = document.createElement('div')
+        noteDates.className = 'note-dates'
+        noteDates.innerText = 'New Note'
+        
+        const saveNote = document.createElement('button')
+        saveNote.className = 'save-note'
+        saveNote.innerText = 'Save'
+        saveNote.onclick = function(){addNewNote(firstName)}
+
+        newNoteForm.appendChild(noteSubject)
+        newNoteForm.appendChild(noteText)
+        newNoteForm.appendChild(noteDates)
+        newNoteForm.appendChild(saveNote)
+
+        notesContainer.prepend(newNoteForm)
+        noteSubject.focus()
+
+    }
+
+    function addNewNote(firstName){
+        const subjectText = document.querySelector('.note-form .note-subject').innerText
+        const noteText = document.querySelector('.note-form .note-text').innerText
+
+        if (subjectText != '' || noteText != ''){
+            const data = {createdAt: new Date()}
+            if (subjectText){
+                data.subject = subjectText
+            }
+            if (noteText){
+                data.note = noteText
+            }
+            fetch(`/add-note/${firstName}`, {
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                createNote(firstName, data, true)
+                notesContainer.removeChild(document.querySelector('.note-form'))
+            })
+        } else {
+            notesContainer.removeChild(document.querySelector('.note-form'))
+        }
+        if (notesContainer.children.length < 1){
+            noNotesAddNote.style.display = 'block'
+        }
     }
 
     const firstName = localStorage.getItem("first-name")
@@ -130,7 +184,7 @@
             window.location = "";
         });
 
-        fetch(`/all-notes/${firstName}`)
+        fetch(`/${firstName}`)
         .then(response => response.json())
         .then(data => {
             for (let entry in data){
@@ -138,7 +192,7 @@
             }
         })
 
-        
+        document.querySelector('.add-note').onclick = function(){addNoteBtn(firstName)};
         
     } else {
         cont.innerHTML = `
