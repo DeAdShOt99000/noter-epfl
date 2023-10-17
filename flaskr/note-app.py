@@ -22,7 +22,7 @@ def toggle_favorite(firstname, id):
     with open("db.json", "r+") as db:
         data = json.loads(db.read())
         for entry in data[firstname]:
-            if entry["id"] == id:
+            if entry["id"] == int(id):
                 entry["favorite"] = 1 if entry["favorite"] == 0 else 0
         db.seek(0)
         db.write(json.dumps(data, indent=4))
@@ -35,7 +35,7 @@ def delete_note(firstname, id):
         data = json.loads(db.read())
         new_lst = []
         for entry in data[firstname]:
-            if entry["id"] != id:
+            if entry["id"] != int(id):
                 new_lst.append(entry)
         data[firstname] = new_lst.copy()
         db.seek(0)
@@ -47,7 +47,7 @@ def delete_note(firstname, id):
 def add_note(firstname):
     with open("db.json", "r+") as db:
         data = json.loads(db.read())
-        id = len(data[firstname]) + 1
+        id = data["id_tracker"] + 1
         subject = flask.request.json.get("subject")
         note = flask.request.json.get("note")
         created_at = flask.request.json.get("createdAt")
@@ -59,6 +59,7 @@ def add_note(firstname):
             "favorite": 0
         }
         data[firstname].append(entry)
+        data["id_tracker"] += 1
         db.seek(0)
         db.write(json.dumps(data, indent=4))
         db.truncate()

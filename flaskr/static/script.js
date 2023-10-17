@@ -1,7 +1,6 @@
 (function(){
     "use strict";
 
-    const cont = document.getElementById("container");
     const notesContainer = document.querySelector('.notes-container')
 
     function highlight(text, word){
@@ -239,8 +238,13 @@
         fetch(`/${firstName}`)
         .then(response => response.json())
         .then(data => {
-            for (let entry in data){
-                createNote(firstName, data[entry])
+            document.body.removeChild(document.querySelector('.loading'));
+            if (Object.keys(data).length < 1){
+                noNotesAddNote.style.display = 'block';
+            } else {
+                for (let entry in data){
+                    createNote(firstName, data[entry]);
+                }
             }
         })
 
@@ -259,7 +263,7 @@
         })
         
     } else {
-        cont.innerHTML = `
+        document.body.innerHTML = `
         <form action="">
             <span class="app-name">Noter</span>
             <input type="text" id="text" placeholder="Enter your first name...">
