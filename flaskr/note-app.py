@@ -13,9 +13,14 @@ def home():
 
 @app.route("/<firstname>")
 def all_notes(firstname):
-    with open("db.json") as db:
-        data = json.loads(db.read())[firstname]
-        return data
+    with open("db.json", "r+") as db:
+        data = json.loads(db.read())
+        if firstname not in data:
+            data[firstname] = []
+            db.seek(0)
+            db.write(json.dumps(data, indent=4))
+            db.truncate()
+        return data[firstname]
     
 @app.route("/toggle-favorite/<firstname>/<id>")
 def toggle_favorite(firstname, id):
